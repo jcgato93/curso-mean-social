@@ -2,9 +2,12 @@
 
 var mongoose=require('mongoose');
 var Schema=mongoose.Schema;//usar la clase Schema
+var mongoosePaginate=require('mongoose-pagination');
+
+
 
 //Crear los campos y los tipos de datos 
-var UserSchema=Schema({
+var UserSchema=new mongoose.Schema({
 
     name:String,
     surname:String,
@@ -14,6 +17,7 @@ var UserSchema=Schema({
     role:String,
     image:String
 });
+
 
 
 //exportar el modelo para su accesibilidad
