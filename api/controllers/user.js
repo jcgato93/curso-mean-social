@@ -237,7 +237,11 @@ function updateUser(req,res){
 
 
 
-
+/**
+ * Subir archivos de imagen/avatar de usuario
+ * @param {*} req 
+ * @param {*} res 
+ */
 function uploadImage(req,res){
     var userId=req.params.id;
 
@@ -263,6 +267,14 @@ function uploadImage(req,res){
         
        if(file_ext=='png' || file_ext=='jpg' || file_ext=='jpeg' || file_ext=='gif' ){
          //si la extension es correcta , actualiza la imagen del usuario
+         User.findByIdAndUpdate(userId,{image:file_name},{new:true},(err,userUpdate)=>{
+            if(err) return res.status(500).send({message:'Error en la peticion'});
+
+            if(!userUpdate) return res.status(404).send({message:'No se ha podido actualizar el usuario'});
+    
+            return res.status(200).send({user:userUpdate});
+         });
+
        }else{
            //si la extension es incorrecta borra el archivo previamente cargado
           removeFilesOfUploads(res,file_path,'Extension no valida');
@@ -277,7 +289,7 @@ function uploadImage(req,res){
 
 
 
-//===================== Locals Function ==================================
+//===================== Local Functions ==================================
 
 /**
  * Borra el archivo que se pasa por parametro en la ruta
@@ -286,10 +298,11 @@ function uploadImage(req,res){
  * @param {*} message 
  */
 function removeFilesOfUploads(res,file_path,message){
-    fs.unlink(file_path,(err)=>{
+    fs.unlink(file_path,(err)=>{//borrar el archivo
         if(err) return res.status(200).send({message:message});
     });
 }
+
 
 
 module.exports={
